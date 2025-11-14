@@ -1,9 +1,9 @@
 {
-  "ProjectName": "toro",
+  "ProjectName": "hfh",
   "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
-  "CreationTime": "2025-10-18T02:23:35.646-05:00",
-  "LastSaveTime": "2025-10-21T13:33:52.107-05:00",
+  "CreationTime": "2025-10-18T01:06:43.311-05:00",
+  "LastSaveTime": "2025-10-18T01:06:43.315-05:00",
   "Prefs_MainPinNamesDisplayMode": 1,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 0,
@@ -12,7 +12,7 @@
   "Prefs_SimPaused": false,
   "Prefs_SimTargetStepsPerSecond": 1000,
   "Prefs_SimStepsPerClockTick": 250,
-  "HighestClearedLevel": 3,
+  "HighestClearedLevel": 0,
   "AllCustomChipNames":[],
   "StarredList":[
     {
@@ -21,18 +21,6 @@
     },
     {
       "Name":"NAND",
-      "IsCollection":false
-    },
-    {
-      "Name":"NOR",
-      "IsCollection":false
-    },
-    {
-      "Name":"OUT-1",
-      "IsCollection":false
-    },
-    {
-      "Name":"IN-1",
       "IsCollection":false
     }
   ],
@@ -46,11 +34,6 @@
       "Chips":["IN-1","IN-4","IN-8","OUT-1","OUT-4","OUT-8"],
       "IsToggledOpen":false,
       "Name":"IN/OUT"
-    },
-    {
-      "Chips":["ROM 256×16","4-1BIT","8-4BIT","8-1BIT","1-8BIT","1-4BIT","4-8BIT","7-SEGMENT","RGB DISPLAY","DOT DISPLAY","LED","BUS-1","BUS-4","BUS-8"],
-      "IsToggledOpen":false,
-      "Name":"OTHER"
     }
   ]
 }

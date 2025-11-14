@@ -6,6 +6,7 @@ namespace DLS.Description
 
 		// ---- Basic Chips ----
 		Nand,
+		Nor,
 		TriStateBuffer,
 		Clock,
 		Pulse,
@@ -45,9 +46,6 @@ namespace DLS.Description
 		BusTerminus_4Bit,
 		Bus_8Bit,
 		BusTerminus_8Bit,
-		
-		// ---- Audio ----
-		Buzzer
 
 	}
 }

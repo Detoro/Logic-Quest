@@ -20,6 +20,7 @@ namespace DLS.Game
 			{
 				CreateChipCollection("BASIC",
 					ChipType.Nand,
+					ChipType.Nor,
 					ChipType.Clock,
 					ChipType.Pulse,
 					ChipType.Key,
@@ -64,6 +65,7 @@ namespace DLS.Game
 			{
 				CreateChipCollection("BASIC",
 					ChipType.Nand,
+					ChipType.Nor,
 					ChipType.Clock,
 					ChipType.Pulse,
 					ChipType.Key,

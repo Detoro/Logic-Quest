@@ -15,6 +15,7 @@ namespace DLS.Game
 
 		public ChipLibrary(ChipDescription[] customChips, ChipDescription[] builtinChips)
 		{
+			builtinChipNames.Add("NOR");
 			// Add built-in chips to list of all chips
 			foreach (ChipDescription chip in builtinChips)
 			{

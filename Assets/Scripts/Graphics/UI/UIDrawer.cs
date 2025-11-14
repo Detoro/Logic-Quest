@@ -15,6 +15,7 @@ namespace DLS.Graphics
 			Preferences,
 			PinRename,
 			MainMenu,
+			LevelsScreen,
 			RebindKeyChip,
 			RomEdit,
 			PulseEdit,
@@ -33,7 +34,7 @@ namespace DLS.Graphics
 
 			using (UI.CreateFixedAspectUIScope(drawLetterbox: true))
 			{
-				if (ActiveMenu is MenuType.MainMenu)
+				if (ActiveMenu is MenuType.MainMenu or MenuType.LevelsScreen)
 				{
 					DrawAppMenus();
 				}
@@ -93,6 +94,7 @@ namespace DLS.Graphics
 				else if (ActiveMenu == MenuType.PinRename) PinEditMenu.OnMenuOpened();
 				else if (ActiveMenu == MenuType.Preferences) PreferencesMenu.OnMenuOpened();
 				else if (ActiveMenu == MenuType.MainMenu) MainMenu.OnMenuOpened();
+				else if (ActiveMenu == MenuType.LevelsScreen) MainMenu.OnLevelOpened();
 				else if (ActiveMenu == MenuType.RebindKeyChip) RebindKeyChipMenu.OnMenuOpened();
 				else if (ActiveMenu == MenuType.RomEdit) RomEditMenu.OnMenuOpened();
 				else if (ActiveMenu == MenuType.Search) SearchPopup.OnMenuOpened();
