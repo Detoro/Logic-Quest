@@ -234,6 +234,12 @@ namespace DLS.Simulation
 					chip.OutputPins[0].State = (ushort)(nandOp & 1);
 					break;
 				}
+				case ChipType.Nor:
+				{
+					uint norOp = 1 ^ (chip.InputPins[0].State | chip.InputPins[1].State);
+					chip.OutputPins[0].State = (ushort)(norOp & 1);
+					break;
+				}
 				case ChipType.Clock:
 				{
 					bool high = stepsPerClockTransition != 0 && ((simulationFrame / stepsPerClockTransition) & 1) == 0;
@@ -497,13 +503,6 @@ namespace DLS.Simulation
 					uint data = chip.InternalState[address];
 					chip.OutputPins[0].State = (ushort)((data >> 8) & ByteMask);
 					chip.OutputPins[1].State = (ushort)(data & ByteMask);
-					break;
-				}
-				case ChipType.Buzzer:
-				{
-					int freqIndex = PinState.GetBitStates(chip.InputPins[0].State);
-					int volumeIndex = PinState.GetBitStates(chip.InputPins[1].State);
-					audioState.RegisterNote(freqIndex, (uint)volumeIndex);
 					break;
 				}
 				// ---- Bus types ----

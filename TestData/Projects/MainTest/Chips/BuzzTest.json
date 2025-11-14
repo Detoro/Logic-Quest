@@ -1,5 +1,5 @@
 {
-  "DLSVersion": "2.1.5",
+  "DLSVersion": "2.1.6",
   "Name": "BuzzTest",
   "NameLocation": 0,
   "ChipType": 0,
@@ -38,48 +38,7 @@
     }
   ],
   "OutputPins":[],
-  "SubChips":[
-    {
-      "Name":"BUZZER",
-      "ID":2106109642,
-      "Label":"",
-      "Position":{
-        "x":-0.375,
-        "y":-0.04762
-      },
-      "OutputPinColourInfo":[],
-      "InternalData":null
-    }
-  ],
-  "Wires":[
-    {
-      "SourcePinAddress":{
-        "PinID":0,
-        "PinOwnerID":893919584
-      },
-      "TargetPinAddress":{
-        "PinID":0,
-        "PinOwnerID":2106109642
-      },
-      "ConnectionType":0,
-      "ConnectedWireIndex":-1,
-      "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
-    },
-    {
-      "SourcePinAddress":{
-        "PinID":0,
-        "PinOwnerID":141095185
-      },
-      "TargetPinAddress":{
-        "PinID":1,
-        "PinOwnerID":2106109642
-      },
-      "ConnectionType":0,
-      "ConnectedWireIndex":-1,
-      "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
-    }
-  ],
+  "SubChips":[],
+  "Wires":[],
   "Displays": null
 }

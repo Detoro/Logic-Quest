@@ -1,9 +1,9 @@
 {
-  "ProjectName": "toro",
+  "ProjectName": "t",
   "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
-  "CreationTime": "2025-10-18T02:23:35.646-05:00",
-  "LastSaveTime": "2025-10-21T13:33:52.107-05:00",
+  "CreationTime": "2025-10-13T16:09:06.693-05:00",
+  "LastSaveTime": "2025-10-16T08:47:26.892-05:00",
   "Prefs_MainPinNamesDisplayMode": 1,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 0,
@@ -12,7 +12,7 @@
   "Prefs_SimPaused": false,
   "Prefs_SimTargetStepsPerSecond": 1000,
   "Prefs_SimStepsPerClockTick": 250,
-  "HighestClearedLevel": 3,
+  "HighestClearedLevel": 1,
   "AllCustomChipNames":[],
   "StarredList":[
     {
@@ -22,24 +22,12 @@
     {
       "Name":"NAND",
       "IsCollection":false
-    },
-    {
-      "Name":"NOR",
-      "IsCollection":false
-    },
-    {
-      "Name":"OUT-1",
-      "IsCollection":false
-    },
-    {
-      "Name":"IN-1",
-      "IsCollection":false
     }
   ],
   "ChipCollections":[
     {
       "Chips":["NAND","NOR","CLOCK","PULSE","KEY","3-STATE BUFFER"],
-      "IsToggledOpen":false,
+      "IsToggledOpen":true,
       "Name":"BASIC"
     },
     {

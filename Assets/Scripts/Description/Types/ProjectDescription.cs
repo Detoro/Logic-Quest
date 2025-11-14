@@ -21,6 +21,7 @@ namespace DLS.Description
 		public bool Prefs_SimPaused;
 		public int Prefs_SimTargetStepsPerSecond;
 		public int Prefs_SimStepsPerClockTick;
+		public int HighestClearedLevel; // tracks progress in the campaign mode
 
 		// List of all player-created chips (in order of creation -- oldest first)
 		public string[] AllCustomChipNames;

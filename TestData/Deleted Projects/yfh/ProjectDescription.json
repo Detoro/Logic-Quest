@@ -1,9 +1,9 @@
 {
-  "ProjectName": "Bassey",
+  "ProjectName": "yfh",
   "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
-  "CreationTime": "2025-10-07T20:07:21.377-05:00",
-  "LastSaveTime": "2025-10-07T20:07:21.377-05:00",
+  "CreationTime": "2025-10-18T01:25:28.386-05:00",
+  "LastSaveTime": "2025-10-18T01:29:34.335-05:00",
   "Prefs_MainPinNamesDisplayMode": 1,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 0,
@@ -12,6 +12,7 @@
   "Prefs_SimPaused": false,
   "Prefs_SimTargetStepsPerSecond": 1000,
   "Prefs_SimStepsPerClockTick": 250,
+  "HighestClearedLevel": 3,
   "AllCustomChipNames":[],
   "StarredList":[
     {
@@ -25,7 +26,7 @@
   ],
   "ChipCollections":[
     {
-      "Chips":["NAND","CLOCK","PULSE","KEY","3-STATE BUFFER"],
+      "Chips":["NAND","NOR","CLOCK","PULSE","KEY","3-STATE BUFFER"],
       "IsToggledOpen":false,
       "Name":"BASIC"
     },

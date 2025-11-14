@@ -67,14 +67,12 @@ namespace DLS.Game
 			ResetStatics();
 
 			AudioState audioState = new();
-			LevelManager levelManager = FindFirstObjectByType<LevelManager>();
 			audioUnity.audioState = audioState;
 
-			Main.Init(audioState, levelManager);
+			Main.Init(audioState);
 
 
-			if (openInMainMenu || !Application.isEditor) Main.LoadMainMenu();
-			else Main.CreateOrLoadProject(testProjectName, openA ? chipToOpenA : chipToOpenB);
+			Main.LoadMainMenu();
 
 		}
 

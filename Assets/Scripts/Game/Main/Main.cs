@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,36 +14,24 @@ namespace DLS.Game
 	{
 		public static readonly Version DLSVersion = new(2, 1, 6);
 		public static readonly Version DLSVersion_EarliestCompatible = new(2, 0, 0);
-		public const string LastUpdatedString = "28 Aug 2025";
+		public const string LastUpdatedString = "16 Oct 2025";
 		public static AppSettings ActiveAppSettings;
 
 		public static Project ActiveProject { get; private set; }
 
 		public static Vector2Int FullScreenResolution => new(Display.main.systemWidth, Display.main.systemHeight);
 		public static AudioState audioState;
-		public static LevelManager levelManager;
+		public static bool LevelCompleteTriggered = false;
+		public static int CurrentLevelIndex = 1;
+		public static ParticleSystem LeftConfettiEffect;
+		public static ParticleSystem RightConfettiEffect;
 
-		public static void Init(AudioState audioState, LevelManager manager)
+		public static void Init(AudioState audioState)
 		{
 			SavePaths.EnsureDirectoryExists(SavePaths.ProjectsPath);
 			SaveAndApplyAppSettings(Loader.LoadAppSettings());
 			Main.audioState = audioState;
-			levelManager = manager;
 		}
-
-		public static void StartLevel(int levelIndex)
-        {
-            if (levelManager != null)
-            {
-                levelManager.LoadLevel(levelIndex);
-                UIDrawer.SetActiveMenu(UIDrawer.MenuType.None); // Hide UI after starting level
-            }
-            else
-            {
-                Debug.LogError("LevelManager is not initialized.");
-            }
-        }
-		
 
 		public static void Update()
 		{
@@ -50,6 +39,8 @@ namespace DLS.Game
 			{
 				CameraController.Update();
 				ActiveProject.Update();
+
+				CheckLevelCompletion(); 
 
 				InteractionState.ClearFrame();
 				WorldDrawer.DrawWorld(ActiveProject);
@@ -60,6 +51,48 @@ namespace DLS.Game
 			HandleGlobalInput();
 		}
 
+		static void CheckLevelCompletion() 
+        {
+            // Only check if we have an active circuit and the level hasn't already been completed
+            if (ActiveProject == null || ActiveProject.ViewedChip == null || LevelCompleteTriggered) return;
+			bool levelPassed = false;
+
+            // Pass the current circuit (DevChipInstance) to the checker
+			DevChipInstance circuit = ActiveProject.ViewedChip;
+
+			switch (CurrentLevelIndex)
+            {
+                case 1:
+                    levelPassed = LevelChecker.CheckLevel1_NAND_Gate(circuit);
+                    break;
+                case 2:
+                    levelPassed = LevelChecker.CheckLevel2_CustomGate(circuit);
+                    break;
+				case 3:
+					levelPassed = LevelChecker.CheckLevel3_HalfAdder(circuit);
+					break;
+            }
+
+            if (levelPassed)
+            {
+                 LevelCompleteTriggered = true;
+
+				 if (CurrentLevelIndex > ActiveProject.description.HighestClearedLevel) 
+				 {
+					ActiveProject.description.HighestClearedLevel = CurrentLevelIndex;
+					Saver.SaveProjectDescription(ActiveProject.description);
+				 }
+				 PlayConfettiEffect();
+				 CurrentLevelIndex++;
+				 LevelCompleteTriggered = false; // Reset for next level
+            }
+        }
+
+		public static void PlayConfettiEffect()
+		{
+			LeftConfettiEffect.Play();
+			RightConfettiEffect.Play();
+		}
 
 		public static void SaveAndApplyAppSettings(AppSettings newSettings)
 		{

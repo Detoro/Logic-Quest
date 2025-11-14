@@ -1,20 +1,21 @@
-using System;
-using System.Linq;
-using DLS.Description;
-using DLS.Game;
-using DLS.SaveSystem;
-using DLS.Simulation;
-using Seb.Helpers;
-using Seb.Vis;
-using Seb.Vis.UI;
-using UnityEngine;
+	using System;
+	using System.Linq;
+	using DLS.Description;
+	using DLS.Game;
+	using DLS.SaveSystem;
+	using DLS.Simulation;
+	using Seb.Helpers;
+	using Seb.Vis;
+	using Seb.Vis.UI;
+	using UnityEngine;
 
-namespace DLS.Graphics
-{
+	namespace DLS.Graphics
+	{
 	public static class MainMenu
 	{
 		public const int MaxProjectNameLength = 20;
 		const bool capitalize = true;
+		static string levelInfoText;
 
 		static MenuScreen activeMenuScreen = MenuScreen.Main;
 		static PopupKind activePopup = PopupKind.None;
@@ -53,10 +54,12 @@ namespace DLS.Graphics
 
 		static readonly string[] levelButtonNames =
 		{
-			FormatButtonString("Level 1"),
-			FormatButtonString("Level 2"),
-			FormatButtonString("Level 3"),
-			FormatButtonString("Level 4")
+			FormatButtonString("Playground"),
+			FormatButtonString("Nand"),
+			FormatButtonString("Nand + Nor"),
+			FormatButtonString("Half Adder"),
+			FormatButtonString("Adder"),
+			FormatButtonString("Memory")
 		};
 
 		static readonly Vector2Int[] Resolutions =
@@ -123,16 +126,22 @@ namespace DLS.Graphics
 				case MenuScreen.Levels:
 					DrawLevelsScreen();
 					break;
-				case MenuScreen.Level1:
+				case MenuScreen.Nand:
 					DrawLevel();
 					break;
-				case MenuScreen.Level2:
+				case MenuScreen.NandNor:
 					DrawLevel();
 					break;
-				case MenuScreen.Level3:
+				case MenuScreen.Hadder:
 					DrawLevel();
 					break;
-				case MenuScreen.Level4:
+				case MenuScreen.Adder:
+					DrawLevel();
+					break;
+				case MenuScreen.PlayGround:
+					DrawLevel();
+					break;
+				case MenuScreen.Mem:
 					DrawLevel();
 					break;
 			}
@@ -159,6 +168,12 @@ namespace DLS.Graphics
 			activeMenuScreen = MenuScreen.Main;
 			activePopup = PopupKind.None;
 			selectedProjectIndex = -1;
+		}
+
+		public static void OnLevelOpened()
+		{
+			activeMenuScreen = MenuScreen.Levels;
+			activePopup = PopupKind.None;
 		}
 
 		static void DrawMainScreen()
@@ -292,6 +307,13 @@ namespace DLS.Graphics
 		{
 			UI.GetInputFieldState(ID_ProjectNameInput).ClearText();
 			activeMenuScreen = MenuScreen.Main;
+			activePopup = PopupKind.None;
+		}
+
+		static void AdvanceToLevel(MenuScreen currentScreen)
+		{
+			UI.GetInputFieldState(ID_ProjectNameInput).ClearText();
+			activeMenuScreen = currentScreen;
 			activePopup = PopupKind.None;
 		}
 
@@ -432,6 +454,34 @@ namespace DLS.Graphics
 			}
 		}
 
+		static void DrawLevelInformation(MenuScreen currentScreen, string levelInfoText = "")
+		{
+			ButtonTheme theme = DrawSettings.ActiveUITheme.MainMenuButtonTheme;
+
+			UI.DrawText(
+				currentScreen.ToString().ToUpper(),
+				theme.font,
+				theme.fontSize,
+				UI.Centre, // text alignment
+				Anchor.Centre, // anchor to screen center
+				Color.white);
+
+			UI.DrawText(
+				levelInfoText,
+				theme.font,
+				theme.fontSize,
+				UI.Centre, // text alignment
+				Anchor.Centre, // anchor to screen center
+				Color.white);
+
+			if (UI.Button("Done", theme, UI.CentreBottom + Vector2.up * 10, Vector2.zero, true, true, true))
+			{
+				AdvanceToLevel(currentScreen);
+			}
+				
+		}
+
+
 		static void OnNamePopupConfirmed(PopupKind kind, string name)
 		{
 			if (kind is PopupKind.NamePopup_RenameProject or PopupKind.NamePopup_DuplicateProject)
@@ -497,31 +547,49 @@ namespace DLS.Graphics
 			}
 		}
 
-		static void DrawLevelsScreen()
+		public static void DrawLevelsScreen()
 		{
 			if (activePopup != PopupKind.None) return;
 
+
 			ButtonTheme theme = DrawSettings.ActiveUITheme.MainMenuButtonTheme;
 			float buttonWidth = 15;
+			int highestClearedLevel = Main.ActiveProject?.description.HighestClearedLevel ?? 1;
+
 
 			int buttonIndex = UI.VerticalButtonGroup(levelButtonNames, theme, UI.Centre + Vector2.up * 6, new Vector2(buttonWidth, 0), false, true, 1);
+			Main.CurrentLevelIndex = buttonIndex;
 
-			if (buttonIndex == 0) // level 1
+
+			if (buttonIndex == 0) // Playground
 			{
-				activeMenuScreen = MenuScreen.Level1;
+				activeMenuScreen = MenuScreen.PlayGround;
 			}
-			else if (buttonIndex == 1) // level 2
+			else if (buttonIndex == 1 && highestClearedLevel >= Main.CurrentLevelIndex) // level 1
 			{
-				activeMenuScreen = MenuScreen.Level2;
+				activeMenuScreen = MenuScreen.Nand;
 			}
-			else if (buttonIndex == 2) // level 3
+			else if (buttonIndex == 2 && highestClearedLevel >= Main.CurrentLevelIndex) // level 2
 			{
-				activeMenuScreen = MenuScreen.Level3;
+				DrawLevelInformation(MenuScreen.NandNor, "Welcome to Level 1! Build a functional NAND gate using the provided input and output pins.");
+				// activeMenuScreen = MenuScreen.NandNor;
 			}
-			else if (buttonIndex == 3) // level 4
+			else if (buttonIndex == 3 && highestClearedLevel >= Main.CurrentLevelIndex) // level 3
 			{
-				activeMenuScreen = MenuScreen.Level4;
+				DrawLevelInformation(MenuScreen.Hadder, "Level 3: The Half-Adder. Combine your knowledge to build a 1-bit half-adder (Sum and Carry outputs).");
+				activeMenuScreen = MenuScreen.LevelInfo;
 			}
+			else if (buttonIndex == 4 && highestClearedLevel >= Main.CurrentLevelIndex) // level 4
+			{
+				DrawLevelInformation(MenuScreen.Adder, "Level 4: Full-Adder. Build a 1-bit full-adder circuit. This requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).");
+				// activeMenuScreen = MenuScreen.Adder;
+			}
+			else if (buttonIndex == 5 && highestClearedLevel >= Main.CurrentLevelIndex) // level 5
+			{
+				activeMenuScreen = MenuScreen.Mem;
+			}
+
+
 
 
 			if (UI.Button("Back", theme, UI.CentreBottom + Vector2.up * 10, Vector2.zero, true, true, true))
@@ -529,6 +597,7 @@ namespace DLS.Graphics
 				BackToMain();
 			}
 		}
+
 
 		static void DrawLevel()
 		{
@@ -562,12 +631,15 @@ namespace DLS.Graphics
 			LoadProject,
 			Settings,
 			About,
-			PuzzleMode,
 			Levels,
-			Level1,
-			Level2,
-			Level3,
-			Level4
+			Nand,
+			NandNor,
+			Hadder,
+			Adder,
+			PlayGround,
+			LevelInfo,
+			Mem,
+			
 		}
 
 		enum PopupKind
@@ -579,4 +651,4 @@ namespace DLS.Graphics
 			NamePopup_NewProject
 		}
 	}
-}
+	}

@@ -243,6 +243,19 @@ namespace DLS.Graphics
 				chipBarTotalWidthLastFrame = UI.PrevBounds.Right - firstButtonLeft + buttonSpacing;
 			}
 
+			// Next Level Toggle button
+			Vector2 nextButtonPos = new(UI.Width - buttonSpacing, padY);
+			bool nextButtonEnabled = !inOtherMenu;
+
+			if (UI.Button("Next", theme.MenuButtonTheme, nextButtonPos, menuButtonSize, nextButtonEnabled, true, false, Anchor.BottomRight, ignoreInputs: ignoreInputs))
+			{
+				toggleMenuFrame = Time.frameCount;
+				Main.CurrentLevelIndex++;
+				Main.LeftConfettiEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+				Main.RightConfettiEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+				ExitToLevelsScreen();
+			};
+
 
 			DrawCollectionsPopup();
 		}
@@ -383,6 +396,12 @@ namespace DLS.Graphics
 					UIDrawer.SetActiveMenu(UIDrawer.MenuType.MainMenu);
 				}
 			}
+		}
+
+		static void ExitToLevelsScreen()
+		{
+			Project.ActiveProject.NotifyExit();
+			UIDrawer.SetActiveMenu(UIDrawer.MenuType.LevelsScreen);
 		}
 
 		static void OpenSaveMenu() => UIDrawer.SetActiveMenu(UIDrawer.MenuType.ChipSave);

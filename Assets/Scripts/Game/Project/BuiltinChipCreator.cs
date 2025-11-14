@@ -24,6 +24,7 @@ namespace DLS.Game
 				CreateInputKeyChip(),
 				// ---- Basic Chips ----
 				CreateNand(),
+				CreateNor(),
 				CreateTristateBuffer(),
 				CreateClock(),
 				CreatePulse(),
@@ -49,9 +50,7 @@ namespace DLS.Game
 				CreateBus(PinBitCount.Bit4),
 				CreateBusTerminus(PinBitCount.Bit4),
 				CreateBus(PinBitCount.Bit8),
-				CreateBusTerminus(PinBitCount.Bit8),
-				// ---- Audio ----
-				CreateBuzzer()
+				CreateBusTerminus(PinBitCount.Bit8)
 			};
 		}
 
@@ -66,20 +65,17 @@ namespace DLS.Game
 			return CreateBuiltinChipDescription(ChipType.Nand, size, col, inputPins, outputPins);
 		}
 
-		static ChipDescription CreateBuzzer()
+		// Assuming this method is in the same class as CreateNand()
+
+		static ChipDescription CreateNor()
 		{
-			Color col = new(0, 0, 0);
+			Color col = new(0.26f, 0.46f, 0.73f); // A shade of blue
+			Vector2 size = new(CalculateGridSnappedWidth(GridSize * 8), GridSize * 4);
 
-			PinDescription[] inputPins =
-			{
-				CreatePinDescription("PITCH", 1, PinBitCount.Bit8),
-				CreatePinDescription("VOLUME", 0, PinBitCount.Bit4),
-			};
+			PinDescription[] inputPins = { CreatePinDescription("IN B", 0), CreatePinDescription("IN A", 1) };
+			PinDescription[] outputPins = { CreatePinDescription("OUT", 2) };
 
-			float height = SubChipInstance.MinChipHeightForPins(inputPins, null);
-			Vector2 size = new(CalculateGridSnappedWidth(GridSize * 9), height);
-
-			return CreateBuiltinChipDescription(ChipType.Buzzer, size, col, inputPins, null, null);
+			return CreateBuiltinChipDescription(ChipType.Nor, size, col, inputPins, outputPins);
 		}
 
 		static ChipDescription dev_CreateRAM_8()
@@ -415,7 +411,7 @@ namespace DLS.Game
 				id,
 				Vector2.zero,
 				bitCount,
-				PinColour.Red,
+				PinColour.Green,
 				PinValueDisplayMode.Off
 			);
 
