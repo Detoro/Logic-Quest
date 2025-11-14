@@ -126,23 +126,11 @@
 				case MenuScreen.Levels:
 					DrawLevelsScreen();
 					break;
-				case MenuScreen.Nand:
+				case MenuScreen.SelectedLevel:
 					DrawLevel();
 					break;
-				case MenuScreen.NandNor:
-					DrawLevel();
-					break;
-				case MenuScreen.Hadder:
-					DrawLevel();
-					break;
-				case MenuScreen.Adder:
-					DrawLevel();
-					break;
-				case MenuScreen.PlayGround:
-					DrawLevel();
-					break;
-				case MenuScreen.Mem:
-					DrawLevel();
+				case MenuScreen.LevelInfo:
+					DrawLevelInformation();
 					break;
 			}
 
@@ -310,10 +298,9 @@
 			activePopup = PopupKind.None;
 		}
 
-		static void AdvanceToLevel(MenuScreen currentScreen)
+		static void AdvanceToLevel()
 		{
-			UI.GetInputFieldState(ID_ProjectNameInput).ClearText();
-			activeMenuScreen = currentScreen;
+			activeMenuScreen = MenuScreen.SelectedLevel;
 			activePopup = PopupKind.None;
 		}
 
@@ -454,34 +441,6 @@
 			}
 		}
 
-		static void DrawLevelInformation(MenuScreen currentScreen, string levelInfoText = "")
-		{
-			ButtonTheme theme = DrawSettings.ActiveUITheme.MainMenuButtonTheme;
-
-			UI.DrawText(
-				currentScreen.ToString().ToUpper(),
-				theme.font,
-				theme.fontSize,
-				UI.Centre, // text alignment
-				Anchor.Centre, // anchor to screen center
-				Color.white);
-
-			UI.DrawText(
-				levelInfoText,
-				theme.font,
-				theme.fontSize,
-				UI.Centre, // text alignment
-				Anchor.Centre, // anchor to screen center
-				Color.white);
-
-			if (UI.Button("Done", theme, UI.CentreBottom + Vector2.up * 10, Vector2.zero, true, true, true))
-			{
-				AdvanceToLevel(currentScreen);
-			}
-				
-		}
-
-
 		static void OnNamePopupConfirmed(PopupKind kind, string name)
 		{
 			if (kind is PopupKind.NamePopup_RenameProject or PopupKind.NamePopup_DuplicateProject)
@@ -547,6 +506,29 @@
 			}
 		}
 
+		static void DrawLevelInformation()
+		{
+			ButtonTheme theme = DrawSettings.ActiveUITheme.MainMenuButtonTheme;
+
+			UI.DrawText(
+				levelInfoText,
+				theme.font,
+				theme.fontSize,
+				UI.Centre, // text alignment
+				Anchor.Centre, // anchor to screen center
+				Color.white);
+
+			if (UI.Button("Done", theme, UI.BottomRight + Vector2.up * 10 + Vector2.left * 30, Vector2.zero, true, true, true))
+			{
+				AdvanceToLevel();
+			}
+
+			if (UI.Button("Back", theme, UI.BottomLeft + Vector2.up * 10 + Vector2.right * 30, Vector2.zero, true, true, true))
+			{
+				BackToMain();
+			}	
+		}
+
 		public static void DrawLevelsScreen()
 		{
 			if (activePopup != PopupKind.None) return;
@@ -563,41 +545,40 @@
 
 			if (buttonIndex == 0) // Playground
 			{
-				activeMenuScreen = MenuScreen.PlayGround;
+				activeMenuScreen = MenuScreen.LevelInfo;
+				levelInfoText = "Playground. A sandbox environment where you can build and test your own circuits without any restrictions.";
 			}
 			else if (buttonIndex == 1 && highestClearedLevel >= Main.CurrentLevelIndex) // level 1
 			{
-				activeMenuScreen = MenuScreen.Nand;
+				activeMenuScreen = MenuScreen.LevelInfo;
+				levelInfoText = "Nand Build a 1-bit full-adder circuit. \nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).";
 			}
 			else if (buttonIndex == 2 && highestClearedLevel >= Main.CurrentLevelIndex) // level 2
 			{
-				DrawLevelInformation(MenuScreen.NandNor, "Welcome to Level 1! Build a functional NAND gate using the provided input and output pins.");
-				// activeMenuScreen = MenuScreen.NandNor;
+				activeMenuScreen = MenuScreen.LevelInfo;
+				levelInfoText = "NandNor Build a functional NAND gate using the provided input and output pins.";
 			}
 			else if (buttonIndex == 3 && highestClearedLevel >= Main.CurrentLevelIndex) // level 3
 			{
-				DrawLevelInformation(MenuScreen.Hadder, "Level 3: The Half-Adder. Combine your knowledge to build a 1-bit half-adder (Sum and Carry outputs).");
 				activeMenuScreen = MenuScreen.LevelInfo;
+				levelInfoText = "Hadder. Combine your knowledge to build a 1-bit half-adder (Sum and Carry outputs).";
 			}
 			else if (buttonIndex == 4 && highestClearedLevel >= Main.CurrentLevelIndex) // level 4
 			{
-				DrawLevelInformation(MenuScreen.Adder, "Level 4: Full-Adder. Build a 1-bit full-adder circuit. This requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).");
-				// activeMenuScreen = MenuScreen.Adder;
+				activeMenuScreen = MenuScreen.LevelInfo;
+				levelInfoText = "Adder. Build a 1-bit full-adder circuit.\nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).";
 			}
 			else if (buttonIndex == 5 && highestClearedLevel >= Main.CurrentLevelIndex) // level 5
 			{
-				activeMenuScreen = MenuScreen.Mem;
+				activeMenuScreen = MenuScreen.LevelInfo;
+				levelInfoText = "Mem. Build a 1-bit full-adder circuit.\nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).";
 			}
-
-
-
 
 			if (UI.Button("Back", theme, UI.CentreBottom + Vector2.up * 10, Vector2.zero, true, true, true))
 			{
 				BackToMain();
 			}
 		}
-
 
 		static void DrawLevel()
 		{
@@ -632,13 +613,8 @@
 			Settings,
 			About,
 			Levels,
-			Nand,
-			NandNor,
-			Hadder,
-			Adder,
-			PlayGround,
+			SelectedLevel,
 			LevelInfo,
-			Mem,
 			
 		}
 
