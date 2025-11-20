@@ -796,6 +796,41 @@ namespace Seb.Vis.UI
 		}
 
 		// Returns the index of the pressed button (-1 if none)
+
+		public static int TwoColumnButtonGroup(string[] names, ButtonTheme theme, Vector2 pos, Vector2 buttonSize, bool fitToTextX, bool fitToTextY, float spacing) => TwoColumnButtonGroup(names, null, theme, pos, buttonSize, fitToTextX, fitToTextY, spacing);
+
+		public static int TwoColumnButtonGroup(string[] names, bool[] activeStates, ButtonTheme theme, Vector2 pos, Vector2 buttonSize, bool fitToTextX, bool fitToTextY, float spacing)
+		{
+			int buttonPressIndex = -1;
+			float startX = pos.x; 
+			
+			for (int i = 0; i < names.Length; i += 2)
+			{
+				bool active1 = activeStates == null || activeStates[i];
+				if (Button(names[i], theme, pos, buttonSize, active1, fitToTextX, fitToTextY))
+				{
+					buttonPressIndex = i;
+				}
+				float rowAdvanceHeight = PrevBounds.Height;
+
+				if (i + 1 < names.Length)
+				{
+					Vector2 button2Pos = pos;
+
+					button2Pos.x = startX + buttonSize.x + spacing;
+					
+					bool active2 = activeStates == null || activeStates[i + 1];
+					if (Button(names[i + 1], theme, button2Pos, buttonSize, active2, fitToTextX, fitToTextY))
+					{
+						buttonPressIndex = i + 1;
+					}
+					rowAdvanceHeight = MathF.Max(rowAdvanceHeight, PrevBounds.Height);
+				}
+				pos.y -= rowAdvanceHeight + spacing;
+			}
+
+			return buttonPressIndex;
+		}
 		public static int HorizontalButtonGroup(string[] names, ButtonTheme theme, Vector2 pos, float regionWidth, float spacing, float pad, Anchor anchor) => HorizontalButtonGroup(names, null, theme, pos, regionWidth, spacing, pad, anchor);
 
 		public static int HorizontalButtonGroup(ReadOnlySpan<string> names, ReadOnlySpan<bool> activeStates, ButtonTheme theme, Vector2 pos, float regionWidth, float spacing, float pad, Anchor anchor, bool ignoreInputs = false) => HorizontalButtonGroup(names, activeStates, theme, pos, Vector2.right * regionWidth, spacing, pad, anchor, true, ignoreInputs);
