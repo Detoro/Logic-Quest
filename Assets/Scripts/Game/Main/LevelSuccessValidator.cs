@@ -6,7 +6,7 @@ using DLS.Simulation;
 
 namespace DLS.Game
 {
-    public static class LevelChecker
+    public static class LevelSuccessValidator
     {
         // Helper to check if a wire connects a specific source pin to a specific target pin
         private static bool IsConnected(WireInstance wire, PinInstance sourcePin, PinInstance targetPin)
@@ -350,5 +350,6 @@ namespace DLS.Game
             // If all 8 combinations passed, the logic is correct.
             return true;
         }
+
     }
 }

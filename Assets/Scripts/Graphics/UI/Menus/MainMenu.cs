@@ -16,6 +16,7 @@
 		public const int MaxProjectNameLength = 20;
 		const bool capitalize = true;
 		static string levelInfoText;
+		static string SelectedLevelName;
 
 		static MenuScreen activeMenuScreen = MenuScreen.Main;
 		static PopupKind activePopup = PopupKind.None;
@@ -59,7 +60,11 @@
 			FormatButtonString("Nand + Nor"),
 			FormatButtonString("Half Adder"),
 			FormatButtonString("Adder"),
-			FormatButtonString("Memory")
+			FormatButtonString("Multiplexer"),
+			FormatButtonString("Memory"),
+			FormatButtonString("Register"),
+			FormatButtonString("Multi-Bit Adder"),
+			FormatButtonString("Integration")
 		};
 
 		static readonly Vector2Int[] Resolutions =
@@ -126,7 +131,7 @@
 				case MenuScreen.Levels:
 					DrawLevelsScreen();
 					break;
-				case MenuScreen.SelectedLevel:
+				case MenuScreen.DrawLevel:
 					DrawLevel();
 					break;
 				case MenuScreen.LevelInfo:
@@ -300,7 +305,7 @@
 
 		static void AdvanceToLevel()
 		{
-			activeMenuScreen = MenuScreen.SelectedLevel;
+			activeMenuScreen = MenuScreen.DrawLevel;
 			activePopup = PopupKind.None;
 		}
 
@@ -506,10 +511,25 @@
 			}
 		}
 
+		static void SetAndShowLevelInfo(string levelName, string infoText)
+		{
+			SelectedLevelName = levelName;
+			levelInfoText = infoText;
+			activeMenuScreen = MenuScreen.LevelInfo;
+		}
+
 		static void DrawLevelInformation()
 		{
 			ButtonTheme theme = DrawSettings.ActiveUITheme.MainMenuButtonTheme;
 
+			UI.DrawText(
+				SelectedLevelName,
+				theme.font,
+				theme.fontSize,
+				UI.Centre + Vector2.up * 8,
+				Anchor.Centre,
+				Color.white);
+			
 			UI.DrawText(
 				levelInfoText,
 				theme.font,
@@ -525,7 +545,7 @@
 
 			if (UI.Button("Back", theme, UI.BottomLeft + Vector2.up * 10 + Vector2.right * 30, Vector2.zero, true, true, true))
 			{
-				BackToMain();
+				activeMenuScreen = MenuScreen.Levels;
 			}	
 		}
 
@@ -536,42 +556,34 @@
 
 			ButtonTheme theme = DrawSettings.ActiveUITheme.MainMenuButtonTheme;
 			float buttonWidth = 15;
+
+			int buttonIndex = UI.TwoColumnButtonGroup(levelButtonNames, theme, UI.Centre + Vector2.up * 6 + Vector2.left * 8, new Vector2(buttonWidth, 0), false, true, 1);
+			Main.CurrentLevelIndex = buttonIndex;
 			int highestClearedLevel = Main.ActiveProject?.description.HighestClearedLevel ?? 1;
 
+			if (buttonIndex >= 0)
+			{
+				(string name, string info) levelData = buttonIndex switch
+				{
+					0 => ("Playground", "Build a 1-bit full-adder circuit.\nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out)."),
+					1 => ("LEVEL 1", "NAND. Build a functional NAND gate using the provided input and output pins."),
+					2 => ("LEVEL 2", "NAND AND NOR. Build a XOR gate using the NAND gate you just built."),
+					3 => ("LEVEL 3", "Half-Adder. Combine your knowledge to build a 1-bit half-adder (Sum and Carry outputs)."),
+					4 => ("LEVEL 4", "Full-Adder. Build a 1-bit full-adder circuit."),
+					5 => ("LEVEL 5", "Multiplexer. Build a memory element (SR Latch)."),
+					6 => ("LEVEL 6", "Memory. Build a memory element (SR Latch)."),
+					7 => ("LEVEL 7", "Register. Build a 4-bit register using D flip-flops."),
+					8 => ("LEVEL 8", "Multi-Bit Adder. Build a 4-bit adder using 1-bit full-adders."),
+					9 => ("LEVEL 9", "Integration. Combine all your knowledge to build a simple ALU\nthat can perform addition and subtraction on 4-bit numbers."),
+					_ => (string.Empty, string.Empty)
+				};
 
-			int buttonIndex = UI.VerticalButtonGroup(levelButtonNames, theme, UI.Centre + Vector2.up * 6, new Vector2(buttonWidth, 0), false, true, 1);
-			Main.CurrentLevelIndex = buttonIndex;
+				Debug.Log($"Highest Level Cleared: {highestClearedLevel}");
 
-
-			if (buttonIndex == 0) // Playground
-			{
-				activeMenuScreen = MenuScreen.LevelInfo;
-				levelInfoText = "Playground. A sandbox environment where you can build and test your own circuits without any restrictions.";
-			}
-			else if (buttonIndex == 1 && highestClearedLevel >= Main.CurrentLevelIndex) // level 1
-			{
-				activeMenuScreen = MenuScreen.LevelInfo;
-				levelInfoText = "Nand Build a 1-bit full-adder circuit. \nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).";
-			}
-			else if (buttonIndex == 2 && highestClearedLevel >= Main.CurrentLevelIndex) // level 2
-			{
-				activeMenuScreen = MenuScreen.LevelInfo;
-				levelInfoText = "NandNor Build a functional NAND gate using the provided input and output pins.";
-			}
-			else if (buttonIndex == 3 && highestClearedLevel >= Main.CurrentLevelIndex) // level 3
-			{
-				activeMenuScreen = MenuScreen.LevelInfo;
-				levelInfoText = "Hadder. Combine your knowledge to build a 1-bit half-adder (Sum and Carry outputs).";
-			}
-			else if (buttonIndex == 4 && highestClearedLevel >= Main.CurrentLevelIndex) // level 4
-			{
-				activeMenuScreen = MenuScreen.LevelInfo;
-				levelInfoText = "Adder. Build a 1-bit full-adder circuit.\nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).";
-			}
-			else if (buttonIndex == 5 && highestClearedLevel >= Main.CurrentLevelIndex) // level 5
-			{
-				activeMenuScreen = MenuScreen.LevelInfo;
-				levelInfoText = "Mem. Build a 1-bit full-adder circuit.\nThis requires three inputs (A, B, Carry In) and two outputs (Sum, Carry Out).";
+				if (!string.IsNullOrEmpty(levelData.name) && buttonIndex <= highestClearedLevel)
+				{
+					SetAndShowLevelInfo(levelData.name, levelData.info);
+				}
 			}
 
 			if (UI.Button("Back", theme, UI.CentreBottom + Vector2.up * 10, Vector2.zero, true, true, true))
@@ -613,7 +625,7 @@
 			Settings,
 			About,
 			Levels,
-			SelectedLevel,
+			DrawLevel,
 			LevelInfo,
 			
 		}

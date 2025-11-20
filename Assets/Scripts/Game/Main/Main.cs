@@ -63,27 +63,29 @@ namespace DLS.Game
 			switch (CurrentLevelIndex)
             {
                 case 1:
-                    levelPassed = LevelChecker.CheckLevel1_NAND_Gate(circuit);
+                    levelPassed = LevelSuccessValidator.CheckLevel1_NAND_Gate(circuit);
                     break;
                 case 2:
-                    levelPassed = LevelChecker.CheckLevel2_CustomGate(circuit);
+                    levelPassed = LevelSuccessValidator.CheckLevel2_CustomGate(circuit);
                     break;
 				case 3:
-					levelPassed = LevelChecker.CheckLevel3_HalfAdder(circuit);
+					levelPassed = LevelSuccessValidator.CheckLevel3_HalfAdder(circuit);
+					break;
+				case 5:
+					levelPassed = LevelSuccessValidator.CheckLevel5_Multiplexer(circuit);
 					break;
             }
-
+			// this logic could potentially be abused to just do one level multiple times, and unlock all levels
             if (levelPassed)
             {
                  LevelCompleteTriggered = true;
 
-				 if (CurrentLevelIndex > ActiveProject.description.HighestClearedLevel) 
+				 if (CurrentLevelIndex == ActiveProject.description.HighestClearedLevel) 
 				 {
 					ActiveProject.description.HighestClearedLevel = CurrentLevelIndex;
 					Saver.SaveProjectDescription(ActiveProject.description);
 				 }
 				 PlayConfettiEffect();
-				 CurrentLevelIndex++;
 				 LevelCompleteTriggered = false; // Reset for next level
             }
         }
@@ -92,6 +94,12 @@ namespace DLS.Game
 		{
 			LeftConfettiEffect.Play();
 			RightConfettiEffect.Play();
+		}
+
+		public static void StopConfettiEffect()
+		{
+			LeftConfettiEffect.Stop();
+			RightConfettiEffect.Stop();
 		}
 
 		public static void SaveAndApplyAppSettings(AppSettings newSettings)

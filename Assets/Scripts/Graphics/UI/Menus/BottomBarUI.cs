@@ -250,9 +250,7 @@ namespace DLS.Graphics
 			if (UI.Button("Next", theme.MenuButtonTheme, nextButtonPos, menuButtonSize, nextButtonEnabled, true, false, Anchor.BottomRight, ignoreInputs: ignoreInputs))
 			{
 				toggleMenuFrame = Time.frameCount;
-				Main.CurrentLevelIndex++;
-				Main.LeftConfettiEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-				Main.RightConfettiEffect.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+				Main.StopConfettiEffect();
 				ExitToLevelsScreen();
 			};
 
